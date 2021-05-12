@@ -9,6 +9,9 @@ import sys
 from pathlib import Path
 import importlib
 
+import tensorflow as tf
+sess = tf.Session(config=tf.ConfigProto(log_device_placement=True))
+
 from SegSRGAN.Function_for_application_test_python3 import segmentation
 
 # Find the weight location downloaded via the module import.

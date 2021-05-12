@@ -92,10 +92,13 @@ def result_folder_name(base_folder, patch, step, result_folder) :
     
     base_folder_split = os.path.split(base_folder)
     
-    path_output = os.path.join(*base_folder_split[:(len(base_folder_split) - 1)], "Result_with_" + result_folder,
-                               "patch_" + str(patch))
+#    path_output = os.path.join(*base_folder_split[:(len(base_folder_split) - 1)], "Result_with_" + result_folder,
+#                               "patch_" + str(patch))
+    path_output = os.path.join(result_folder, "patch_" + str(patch))
 
     if patch is None:
+
+        path_output = os.path.join(path_output, os.path.basename(os.path.dirname(base_folder)))
 
         path_output_cortex = os.path.join(path_output, "Cortex_whole_image.nii.gz")
 
@@ -105,13 +108,15 @@ def result_folder_name(base_folder, patch, step, result_folder) :
         
     else:
         
-         path_output = path_output + "_step_" + str(step)
-         
-         path_output_cortex = os.path.join(path_output, "Cortex_patch_" + str(patch) + "_step_" + str(step) + ".nii.gz")
+        path_output = path_output + "_step_" + str(step)
+        
+        path_output = os.path.join(path_output, os.path.basename(os.path.dirname(base_folder)))
 
-         path_output_SR = os.path.join(path_output, "SR_patch_" + str(patch) + "_step_" + str(step) + ".nii.gz")
+        path_output_cortex = os.path.join(path_output, "Cortex_patch_" + str(patch) + "_step_" + str(step) + ".nii.gz")
+
+        path_output_SR = os.path.join(path_output, "SR_patch_" + str(patch) + "_step_" + str(step) + ".nii.gz")
          
-         path_output_mask = os.path.join(path_output, "Mask_patch_" + str(patch) + "_step_" + str(step) + ".nii.gz")
+        path_output_mask = os.path.join(path_output, "Mask_patch_" + str(patch) + "_step_" + str(step) + ".nii.gz")
 
     return path_output, path_output_cortex, path_output_SR, path_output_mask
 

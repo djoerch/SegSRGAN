@@ -11,8 +11,9 @@ fi
 
 HOST_PORT_JUPYTER=8878
 HOST_PORT_SSH=8822
-HOST_PATH="/home/daniel"
-CONTAINER_PATH="/home/daniel"
+HOME_DIR="/home/daniel"
+HOST_PATHS=("${HOME_DIR}" "/mnt/data")
+CONTAINER_PATHS=("${HOME_DIR}" "/mnt/data")
 CUSTOM_CONTAINER_NAME="segsrgan_container"
 IMAGE_TAG="segsrgan"
 
@@ -27,10 +28,13 @@ args+=(--gpus "device=0")
 args+=(--cpus="12")
 args+=(--memory="32g")
 args+=(--shm-size="512m")
-args+=(--workdir "${CONTAINER_PATH}")
+args+=(--workdir "${HOME_DIR}")
 args+=(-p ${HOST_PORT_JUPYTER}:8888)
 args+=(-p ${HOST_PORT_SSH}:22)
-args+=(-v ${HOST_PATH}:${CONTAINER_PATH})
+for index in ${!HOST_PATHS[@]}
+do
+    args+=(-v ${HOST_PATHS[${index}]}:${CONTAINER_PATHS[${index}]})
+done
 args+=(--name=${CUSTOM_CONTAINER_NAME})
 args+=(-t ${IMAGE_TAG})
 

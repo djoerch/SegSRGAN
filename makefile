@@ -10,7 +10,7 @@ pkg-upload: pkg
 	@python3 -m twine upload --repository-url https://upload.pypi.org/legacy/ dist/*
 
 test:
-	@python3 testsuite/seg.py
+	@python3 example/seg.py
 
 clean:
 	@rm -rf build

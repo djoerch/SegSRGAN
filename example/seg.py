@@ -16,9 +16,11 @@ wpath_base=importlib.util.find_spec("SegSRGAN").submodule_search_locations[0]
 wpath=os.path.join( wpath_base, "weights/Perso_without_data_augmentation" )
 
 # Path to nifti file (TO BE ADAPTED).
-input_nii = os.path.join( parent, "<PATH_TO_YOUR_IMAGE_HERE>.nii.gz" )
+parent = "/home/daniel/scratch/images"
+input_nii = os.path.join( parent, "ATA32_highres.nii.gz" )
 output_cortex_nii = os.path.join( parent,"cortex.nii.gz" )
 output_hr_nii = os.path.join( parent,"SR.nii.gz" )
+output_mask_nii = os.path.join( parent,"mask.nii.gz" )
 
 # Segmentation.
 segmentation( input_file_path = input_nii,
@@ -27,7 +29,10 @@ segmentation( input_file_path = input_nii,
               patch=128,
               path_output_cortex = output_cortex_nii,
               path_output_hr = output_hr_nii,
-              weights_path=wpath )
+	      path_output_mask = output_mask_nii,
+              weights_path=wpath,
+	      interpolation_type="Spline",
+ )
 
 
                         

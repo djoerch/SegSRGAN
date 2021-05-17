@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# example call: `bash segsrgan_launch_docker_container.sh -it`
+
 
 if [[ $# == 1 ]]
 then

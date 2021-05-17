@@ -14,6 +14,9 @@ LOG_FOLDER="logs"
 CONTINUE_FROM_EPOCH=10
 
 
+mkdir ${EXP_FOLDER}
+
+
 cmd="python SegSRGAN/SegSRGAN_training.py"
 args=()
 args+=(-e 100)  # num epochs

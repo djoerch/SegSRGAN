@@ -37,7 +37,7 @@ for index in ${!HOST_PATHS[@]}
 do
     args+=(-v ${HOST_PATHS[${index}]}:${CONTAINER_PATHS[${index}]})
 done
-args+=(--name=${CUSTOM_CONTAINER_NAME})
+args+=(--name="${CUSTOM_CONTAINER_NAME}")
 args+=(-t ${IMAGE_TAG})
 
 ${cmd} ${args[@]}

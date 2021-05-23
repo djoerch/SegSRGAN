@@ -7,6 +7,7 @@ import glob
 import argparse
 import ast
 import requests
+import re
 
 import warnings
 
@@ -90,35 +91,62 @@ def create_folder(directory):
         
 def result_folder_name(base_folder, patch, step, result_folder) :
     
-    base_folder_split = os.path.split(base_folder)
-    
+#    base_folder_split = os.path.split(base_folder)
+
 #    path_output = os.path.join(*base_folder_split[:(len(base_folder_split) - 1)], "Result_with_" + result_folder,
 #                               "patch_" + str(patch))
-    path_output = os.path.join(result_folder, "patch_" + str(patch))
+#    path_output = os.path.join(result_folder, "patch_" + str(patch))
 
+    # 1. infer subject name and image space
+    filename = os.path.basename(base_folder)  # NOTE: `base_folder` is actually the path to a file and not a 'folder'.
+    subj_regex = re.compile(r"(?P<subj>\w{3}\d{2})_(?P<img_space>axial|coronal|sagittal|highres).*\.nii\.gz")
+    match = subj_regex.search(filename)
+    subj_name = match.group("subj")
+    img_space = match.group("img_space")
+
+    # 3. create output base name
+    # <subj>_<img_space>_....nii.gz
+    output_filename_template = "{subj}_{img_space}_{other}_{suffix}.nii.gz"
+
+    # 4. create patch / whole image suffix (in if clause)
     if patch is None:
-
-        path_output = os.path.join(path_output, os.path.basename(os.path.dirname(base_folder)))
-
-        path_output_cortex = os.path.join(path_output, "Cortex_whole_image.nii.gz")
-
-        path_output_SR = os.path.join(path_output, "SR_whole_image.nii.gz")
-        
-        path_output_mask = os.path.join(path_output, "Mask_whole_image.nii.gz")
-        
+        patch_suffix = "whole_image"
     else:
-        
-        path_output = path_output + "_step_" + str(step)
-        
-        path_output = os.path.join(path_output, os.path.basename(os.path.dirname(base_folder)))
+        patch_suffix = "patch_{patch}_step_{step}".format(patch=patch, step=step)
 
-        path_output_cortex = os.path.join(path_output, "Cortex_patch_" + str(patch) + "_step_" + str(step) + ".nii.gz")
+    # 5. create output base path
+    output_base_path = os.path.join(result_folder, patch_suffix, subj_name)
 
-        path_output_SR = os.path.join(path_output, "SR_patch_" + str(patch) + "_step_" + str(step) + ".nii.gz")
+    # 6. compose to return values
+    path_output_seg = os.path.join(output_base_path, output_filename_template.format(subj=subj_name, img_space=img_space, other=patch_suffix, suffix="SEG"))
+    path_output_SR = os.path.join(output_base_path, output_filename_template.format(subj=subj_name, img_space=img_space, other=patch_suffix, suffix="SR"))
+    path_output_mask = os.path.join(output_base_path, output_filename_template.format(subj=subj_name, img_space=img_space, other=patch_suffix, suffix="mask"))
+
+    return output_base_path, path_output_seg, path_output_SR, path_output_mask
+
+#    if patch is None:
+
+#        path_output = os.path.join(path_output, os.path.basename(os.path.dirname(base_folder)))
+
+#        path_output_cortex = os.path.join(path_output, "Cortex_whole_image.nii.gz")
+
+#        path_output_SR = os.path.join(path_output, "SR_whole_image.nii.gz")
+        
+#        path_output_mask = os.path.join(path_output, "Mask_whole_image.nii.gz")
+        
+#    else:
+        
+#        path_output = path_output + "_step_" + str(step)
+        
+#        path_output = os.path.join(path_output, os.path.basename(os.path.dirname(base_folder)))
+
+#        path_output_cortex = os.path.join(path_output, "Cortex_patch_" + str(patch) + "_step_" + str(step) + ".nii.gz")
+
+#        path_output_SR = os.path.join(path_output, "SR_patch_" + str(patch) + "_step_" + str(step) + ".nii.gz")
          
-        path_output_mask = os.path.join(path_output, "Mask_patch_" + str(patch) + "_step_" + str(step) + ".nii.gz")
+#        path_output_mask = os.path.join(path_output, "Mask_patch_" + str(patch) + "_step_" + str(step) + ".nii.gz")
 
-    return path_output, path_output_cortex, path_output_SR, path_output_mask
+#    return path_output, path_output_cortex, path_output_SR, path_output_mask
 
 
 

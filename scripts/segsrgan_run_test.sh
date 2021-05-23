@@ -3,9 +3,9 @@
 
 PATH_TO_DATA_ROOT="/home/daniel/scratch"
 
-EXP_FOLDER="discriminator_2"
+EXP_FOLDER="discriminator_5"
 
-OUTPUT_IMG_FOLDER="output_LC"
+OUTPUT_IMG_FOLDER="output_HS"
 WEIGHTS_FOLDER="weights_test"
 WEIGHTS_NAME="SegSRGAN_epoch_100"
 
@@ -15,7 +15,7 @@ STEP_SIZE=32
 
 cmd="python SegSRGAN/job_model.py"
 args=()
-args+=(--path "${PATH_TO_DATA_ROOT}/splits/test_LC.csv")
+args+=(--path "${PATH_TO_DATA_ROOT}/splits/test.csv")
 args+=(--patch ${PATCH_SIZE})
 args+=(--step ${STEP_SIZE})
 args+=(--result_folder_name "${PATH_TO_DATA_ROOT}/${EXP_FOLDER}/${OUTPUT_IMG_FOLDER}/${WEIGHTS_NAME}")

@@ -56,3 +56,17 @@ function write_csv(){
 write_csv "${PATH_TO_DATAROOT}/training" ${list_of_subjects_train} "Train" "${PATH_TO_OUTPUT_FOLDER}/training_iso_HS.csv"
 write_csv "${PATH_TO_DATAROOT}/validation" ${list_of_subjects_valid} "Test" "${PATH_TO_OUTPUT_FOLDER}/training_iso_HS.csv"  # NOTE: this is validation, but in SegSRGAN it is called 'test', too.
 write_csv "${PATH_TO_DATAROOT}/test" ${list_of_subjects_test} "Test" "${PATH_TO_OUTPUT_FOLDER}/test_iso_HS.csv"
+
+
+
+# NOTE: the following code snippet is useful if non-matching image grids must
+#    be adjusted (i.e. resampling all images to the same 'image space').
+#    SegSRGAN requires the input image and the label image to have the same voxel space.
+#for subj in *
+#do
+#    mrgrid \
+#        -template ${subj}/${subj}_highres_target.nii.gz \
+#        ${subj}/${subj}_mask.nii.gz \
+#        regrid ${subj}/${subj}_mask_regrid.nii.gz
+#done
+

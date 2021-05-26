@@ -43,7 +43,7 @@ args+=("_SR")
 args+=("${SEG_ALGO}")
 args+=("/home/daniel/opt_temp/normalised_6")
 
-${cmd} ${args[@]}
+#${cmd} ${args[@]}
 
 
 # prepare summary folder
@@ -57,4 +57,23 @@ args+=(--title "SegSRGAN (eval: HS; ${SEG_ALGO}; patch: ${PATH_SIZE})")
 args+=(--ylim "20")
 args+=(-o "${path_to_seg_folder}/.summary/summary.png")
 
-${cmd} "${args[@]}"
+#${cmd} "${args[@]}"
+
+
+# make png summaries (SR)
+for path_to_subj in ${path_to_eval_folder}/*
+do
+    for path_to_file in ${path_to_subj}/*.nii.gz
+    do
+        mrpeek -batch ${path_to_file} | sixel2png > ${path_to_file/%.nii.gz/.png}
+    done
+done
+
+# make png summaries (seg)
+for path_to_subj in ${path_to_seg_folder}/*
+do
+    for path_to_file in ${path_to_subj}/segmentation/Femural_Cartilage/*.nii.gz
+    do
+        mrpeek -batch ${path_to_file} | sixel2png > ${path_to_file/%.nii.gz/.png}
+    done
+done

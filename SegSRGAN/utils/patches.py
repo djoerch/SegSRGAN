@@ -207,6 +207,8 @@ def create_patch_from_df_hr(df,
         print(image_cropping_method)
         hdf5_labels, had5_dataa = create_patches(label_image, reference_image, interpolated_image, mask_image, fit_mask, image_cropping_method, patch_size, stride,nb_classe_mask)
         
+        del label_image, reference_image, interpolated_image, mask_image
+
         print(hdf5_labels.shape)
         print(fit_mask)
         print(image_cropping_method)
@@ -232,13 +234,15 @@ def create_patch_from_df_hr(df,
                               datas.shape[-3],
                               datas.shape[-2],
                               datas.shape[-1])
-        
+        del data_list, had5_dataa
+
         labels = np.concatenate(np.asarray(labels_list))
         labels = labels.reshape(-1,
                                 labels.shape[-4],
                                 labels.shape[-3],
                                 labels.shape[-2],
                                 labels.shape[-1])
+        del labels_list, hdf5_labels
                                 
         t2 = time.time()
         print("Image tranformation + patch creation and organisation :"+str(t2-t1))

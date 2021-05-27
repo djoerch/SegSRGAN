@@ -28,6 +28,7 @@ args+=(--patch ${PATCH_SIZE})
 args+=(--step ${STEP_SIZE})
 args+=(--result_folder_name "${path_to_result_folder}")
 args+=(--weights_path "${PATH_TO_DATA_ROOT}/${EXP_FOLDER}/${WEIGHTS_FOLDER}/${WEIGHTS_NAME}")
+args+=(--new_low_res "0.5 0.5 0.5")
 
 #${cmd} ${args[@]}
 

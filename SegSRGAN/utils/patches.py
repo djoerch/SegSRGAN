@@ -473,8 +473,14 @@ def create_lr_hr_label(reference_name, label_name,mask_name,new_resolution, inte
     return low_resolution_image, reference_image, label_image, mask_image, up_scale, original_LR
 
 
+def frac_power_of_neg(arr, power):
+    """src: https://stackoverflow.com/a/45384691"""
+    return np.sign(arr) * np.abs(arr) ** power
+
+
 def change_contrast(hr, lr, power):
-    hr = hr**power
-    lr = lr**power
+
+    hr = frac_power_of_neg(hr, power)
+    lr = frac_power_of_neg(lr, power)
     
     return hr, lr

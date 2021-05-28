@@ -234,7 +234,8 @@ def create_patch_from_df_hr(df,
                               datas.shape[-3],
                               datas.shape[-2],
                               datas.shape[-1])
-        del data_list, had5_dataa
+        data_list = []
+        del had5_dataa
 
         labels = np.concatenate(np.asarray(labels_list))
         labels = labels.reshape(-1,
@@ -242,7 +243,8 @@ def create_patch_from_df_hr(df,
                                 labels.shape[-3],
                                 labels.shape[-2],
                                 labels.shape[-1])
-        del labels_list, hdf5_labels
+        label_list = []
+        del hdf5_labels
                                 
         t2 = time.time()
         print("Image tranformation + patch creation and organisation :"+str(t2-t1))
@@ -361,7 +363,9 @@ def create_patches(label, hr, interp, mask, fit_mask, image_cropping_method, pat
 
 def remove_patch_based_on_overlapping_with_mask(data_patch,label_hr_patch,label_cortex_patch,mask_patch):
     
-    patches_to_keep = [np.mean(mask_patch[i,:,:,:])>0.5 for i in range(mask_patch.shape[0])]
+    # NOTE: for the overlap with cartilage, any overlap is good enought for our purpose.
+    #    author: djoerch@gmail.com
+    patches_to_keep = [np.mean(mask_patch[i,:,:,:])>0.0 for i in range(mask_patch.shape[0])]
     
     print("after overlapping with mask",np.sum(patches_to_keep),"have been kept on the",len(patches_to_keep),"initial")
     

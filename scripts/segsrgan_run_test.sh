@@ -5,11 +5,13 @@ PATH_TO_DATA_ROOT="/home/daniel/scratch"
 
 EXP_FOLDER="discriminator_5"
 
-OUTPUT_IMG_FOLDER="output_HS_LR_sim"
+#OUTPUT_IMG_FOLDER="output_HS_LR_sim"
+OUTPUT_IMG_FOLDER="output_LC"
 WEIGHTS_FOLDER="weights_test"
-WEIGHTS_NAME="SegSRGAN_epoch_200"
+WEIGHTS_NAME="SegSRGAN_epoch_100"
+CSV_NAME="test_LC.csv"  # subjects to use
 
-PATCH_SIZE=128
+PATCH_SIZE=64
 STEP_SIZE=32
 
 SEG_ALGO="25D"
@@ -23,7 +25,7 @@ path_to_seg_folder="${path_to_eval_folder}_segmentation"
 # run SR
 cmd="python SegSRGAN/job_model.py"
 args=()
-args+=(--path "${PATH_TO_DATA_ROOT}/splits/test_HS_LR_sim.csv")
+args+=(--path "${PATH_TO_DATA_ROOT}/splits/${CSV_NAME}")
 args+=(--patch ${PATCH_SIZE})
 args+=(--step ${STEP_SIZE})
 args+=(--result_folder_name "${path_to_result_folder}")

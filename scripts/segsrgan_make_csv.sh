@@ -19,7 +19,7 @@ SUFFIX_LABEL="mask"
 FOLDER_LABEL=""
 
 # CSV settings
-HEADER="HR_image,Label_image,Base"
+HEADER="HR_image,Label_image,Mask_image,Base"
 
 
 function write_csv(){
@@ -45,17 +45,21 @@ function write_csv(){
 
         hr_image="${path_to_subject_folder}/${subject}_${SUFFIX_HR}.nii.gz"
         label_image="${path_to_subject_folder}/${FOLDER_LABEL}/${subject}_${SUFFIX_LABEL}.nii.gz"
+        mask_image="${label_image}"
 
-        echo "${hr_image},${label_image},${mode}" >> ${path_to_output_file}
+        echo "${hr_image},${label_image},${mask_image},${mode}" >> ${path_to_output_file}
 
     done
 
 }
 
 
-write_csv "${PATH_TO_DATAROOT}/training" ${list_of_subjects_train} "Train" "${PATH_TO_OUTPUT_FOLDER}/training_iso_HS.csv"
-write_csv "${PATH_TO_DATAROOT}/validation" ${list_of_subjects_valid} "Test" "${PATH_TO_OUTPUT_FOLDER}/training_iso_HS.csv"  # NOTE: this is validation, but in SegSRGAN it is called 'test', too.
-write_csv "${PATH_TO_DATAROOT}/test" ${list_of_subjects_test} "Test" "${PATH_TO_OUTPUT_FOLDER}/test_iso_HS.csv"
+write_csv "${PATH_TO_DATAROOT}/training" ${list_of_subjects_train} "Train" "${PATH_TO_OUTPUT_FOLDER}/training_iso_HS_w_mask.csv"
+write_csv "${PATH_TO_DATAROOT}/validation" ${list_of_subjects_valid} "Test" "${PATH_TO_OUTPUT_FOLDER}/training_iso_HS_w_mask.csv"  # NOTE: this is validation, but in SegSRGAN it is called 'test', too.
+write_csv "${PATH_TO_DATAROOT}/test" ${list_of_subjects_test} "Test" "${PATH_TO_OUTPUT_FOLDER}/test_iso_HS_w_mask.csv"
+#write_csv "${PATH_TO_DATAROOT}" ${list_of_subjects_train} "Train" "${PATH_TO_OUTPUT_FOLDER}/training_w_mask.csv"
+#write_csv "${PATH_TO_DATAROOT}" ${list_of_subjects_valid} "Test" "${PATH_TO_OUTPUT_FOLDER}/training_w_mask.csv"  # NOTE: this is validation, but in SegSRGAN it is called 'test', too.
+#write_csv "${PATH_TO_DATAROOT}" ${list_of_subjects_test} "Test" "${PATH_TO_OUTPUT_FOLDER}/test_w_mask.csv"
 
 
 

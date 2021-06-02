@@ -207,8 +207,26 @@ class SegSrganTrain(object):
         else : 
             colunms_dice=["Dice"]
 
-        df_dice = pd.DataFrame(index=np.arange(initialize_epoch, training_epoch + 1), columns=colunms_dice)
-        df_MSE = pd.DataFrame(index=np.arange(initialize_epoch, training_epoch + 1), columns=["MSE"])
+        if os.path.isfile(dice_file):
+            df_dice = pd.read_csv(dice_file, index_col=0)
+        else:
+            df_dice = pd.DataFrame(index=np.arange(initialize_epoch, training_epoch + 1), columns=colunms_dice)
+        if os.path.isfile(mse_file):
+            df_MSE = pd.read_csv(mse_file, index_col=0)
+        else:
+            df_MSE = pd.DataFrame(index=np.arange(initialize_epoch, training_epoch + 1), columns=["MSE"])
+
+        loss_D_file = os.path.join(os.path.dirname(dice_file), "loss_D.csv")
+        if os.path.isfile(loss_D_file):
+            df_loss_D = pd.read_csv(loss_D_file, index_col=0)
+        else:
+            df_loss_D = pd.DataFrame(columns=[0, 1, 2, 3])
+
+        loss_G_file = os.path.join(os.path.dirname(dice_file), "loss_G.csv")
+        if os.path.isfile(loss_G_file):
+            df_loss_G = pd.read_csv(loss_G_file, index_col=0)
+        else:
+            df_loss_G = pd.DataFrame(columns=[0, 1, 2])
 
         # Training phase
         for EpochIndex in range(initialize_epoch, training_epoch + 1):
@@ -248,6 +266,8 @@ class SegSrganTrain(object):
             for iters in range(0, iterationPerEpoch):
 
                 iteration += 1
+
+                sum_dis_loss = [0.0, 0.0, 0.0, 0.0]
 
                 # Training discriminator
                 for cidx in range(number_of_disciminator_iteration):
@@ -305,6 +325,9 @@ class SegSrganTrain(object):
 
                     print("time for one uptade of discriminator :" + str(t2 - t1))
                     print("Update " + str(cidx) + ": [D loss : " + str(dis_loss) + "]")
+                    sum_dis_loss = [s + l for s, l in zip(sum_dis_loss, dis_loss)]
+
+                df_loss_D = df_loss_D.append(pd.DataFrame([s / number_of_disciminator_iteration for s in sum_dis_loss]), ignore_index=True)
 
                 # Training generator
                 # Loading data        
@@ -325,6 +348,8 @@ class SegSrganTrain(object):
                     gen_loss = self.GeneratorModel_multi_gpu.train_on_batch([train_input_gen], [real, train_output_gen])
 
                 print("Iter " + str(iteration) + " [A loss : " + str(gen_loss) + "]")
+
+                df_loss_G = df_loss_G.append(pd.DataFrame([gen_loss]), ignore_index=True)
 
                 t2 = time.time()
 
@@ -432,6 +457,8 @@ class SegSrganTrain(object):
 
             df_dice.to_csv(dice_file)
             df_MSE.to_csv(mse_file)
+            df_loss_D.to_csv(loss_D_file)
+            df_loss_G.to_csv(loss_G_file)
 
             shutil.rmtree(os.path.join(folder_training_data,"train_mini_batch"))
 
